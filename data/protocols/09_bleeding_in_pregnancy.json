@@ -1,0 +1,64 @@
+{
+  "name": "Bleeding in Pregnancy",
+  "version": "1.0",
+  "population": "pregnant woman",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from WHO recommendations on antenatal care and on managing obstetric emergencies (haemorrhage, ectopic pregnancy, pre-eclampsia), and NHS guidance on bleeding in pregnancy.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the bleeding heavy, soaking a pad in an hour or less, or is she passing large clots?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Has she fainted, or is she dizzy, very pale, or very weak?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is there severe belly pain, or pain in the shoulder tip?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is she having a fit, or a severe headache with blurred vision?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is she in the second half of pregnancy (about 5 months or more) and having any bleeding?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 6,
+      "text": "Is there any bleeding or spotting earlier in pregnancy, even if light?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is there fever or a bad-smelling discharge?",
+      "disposition": "urgent"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Go to the nearest hospital with a maternity unit now.",
+      "Lie down on her left side while waiting for transport.",
+      "Bring the antenatal card or clinic book.",
+      "Do not put anything inside the vagina."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic with a maternity service today.",
+      "Rest and avoid heavy lifting.",
+      "Use pads, not tampons, so the amount of bleeding can be checked.",
+      "Call 112 if bleeding becomes heavy or severe pain starts."
+    ],
+    "self_care": [
+      "No bleeding or warning signs were reported.",
+      "Keep all antenatal clinic appointments.",
+      "Call back at once if there is any bleeding, severe pain, headache with blurred vision, or reduced baby movements."
+    ]
+  }
+}

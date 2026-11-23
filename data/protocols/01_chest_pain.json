@@ -1,0 +1,71 @@
+{
+  "name": "Chest Pain",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from NHS 111 and NHS public guidance on chest pain and heart attack symptoms, and WHO guidance on cardiovascular emergencies.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Has the person collapsed, or are they unresponsive or not breathing normally?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is there severe difficulty breathing, or are the lips blue or grey?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Has the chest pain lasted more than five minutes, or does it feel crushing or heavy?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is the pain spreading to the arm, jaw, or back, or is the person sweaty or faint?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Does the person have known heart disease, and is this pain different from usual?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 6,
+      "text": "Is the pain worse on breathing in, or is there a cough with fever?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is the pain only felt when pressing on the chest wall, or did it start after an injury?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance.",
+      "Sit the person down and keep them calm and still while waiting for help.",
+      "If the person becomes unresponsive and is not breathing normally, start chest compressions if trained.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic today and be seen within the next few hours.",
+      "Take a list of current medicines with you.",
+      "Rest and avoid physical effort until seen.",
+      "If the pain becomes severe, crushing, or spreads to the arm or jaw, call 112 immediately."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days.",
+      "Rest the area and avoid heavy lifting.",
+      "Paracetamol can be taken as directed on the pack for pain.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "The answers do not point to a serious cause at this time.",
+      "Rest and avoid heavy effort today.",
+      "Paracetamol can be taken as directed on the pack.",
+      "Call back or call 112 at once if the pain becomes heavy or crushing, spreads, or comes with breathlessness, sweating, or fainting."
+    ]
+  }
+}

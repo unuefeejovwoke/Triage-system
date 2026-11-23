@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New consultation · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* stage 1 */
+.s1{display:grid;grid-template-columns:340px 1fr;gap:14px;align-items:start}
+#sex{display:grid;grid-template-columns:1fr 1fr}
+.script{background:var(--card2);border:1px dashed var(--line3);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--mu);margin-bottom:10px;line-height:1.55}
+.script b{color:var(--tx);font-weight:550}
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.pc{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;text-align:left;transition:border-color .12s,background .12s;display:flex;gap:11px;align-items:flex-start}
+.pc:hover{border-color:var(--line3);background:var(--hover)}
+.pc.on{border-color:var(--priL);background:var(--priS);box-shadow:0 0 0 3px var(--priS)}
+.pc b{font-size:13px;font-weight:600;line-height:1.35;display:block}
+.pc small{font-size:11.5px;color:var(--mu);display:block;margin-top:3px}
+.pc small span{text-transform:capitalize}
+.sbar{position:sticky;bottom:12px;margin-top:auto;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(10px);border:1px solid var(--line2);border-radius:14px;padding:10px 10px 10px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;box-shadow:var(--sh2)}
+.sbar .sum{font-size:12.5px;color:var(--mu)}.sbar .sum b{color:var(--tx);font-weight:550}
+/* stage 2 */
+.s2{display:grid;grid-template-columns:260px 1fr 290px;gap:14px;align-items:start}
+.qcard{padding:22px 24px;position:relative;overflow:hidden}
+.qcard::before{content:"";position:absolute;inset:0 0 auto 0;height:120px;background:radial-gradient(600px 120px at 20% -40%,var(--glow),transparent);pointer-events:none}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative}
+.qnum{font-size:12px;color:var(--mu);font-weight:550}
+.segs{display:flex;gap:4px;margin:14px 0 0}.segs i{flex:1;height:4px;border-radius:99px;background:var(--line2)}
+.segs i.f{background:var(--pri)}.segs i.c{background:var(--pri);opacity:.45}
+.qtext{font-size:23px;font-weight:600;line-height:1.38;letter-spacing:-.3px;margin:22px 0 18px;position:relative}
+.note{display:flex;gap:9px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--mu);margin-bottom:18px;line-height:1.5}
+.note b{color:var(--tx2)}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yn .btn{height:56px;font-size:15px;border-radius:12px;font-weight:600}
+.yes{background:var(--em);color:#fff;box-shadow:0 8px 22px color-mix(in srgb,var(--em) 35%,transparent)}.yes:hover{filter:brightness(1.08)}
+.yes kbd{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);color:#fff}
+.no{background:var(--card2);color:var(--tx);border:1px solid var(--line3)}.no:hover{background:var(--hover)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:var(--fa)}
+.ans{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line);font-size:12.5px;line-height:1.45}
+.ans:first-of-type{border-top:0}
+.ans .qn{font-size:11px;color:var(--fa);width:20px;flex:none;padding-top:1px}
+.ans .t{flex:1;color:var(--tx2)}
+.ans.pending{opacity:.45}
+/* stage 3 */
+.s3{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+.banner{border-radius:16px;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px;border:1px solid var(--lvL);
+  background:radial-gradient(500px 200px at 0% 0%,var(--lvS),transparent 70%),linear-gradient(135deg,color-mix(in srgb,var(--lv) 14%,var(--card)),var(--card) 70%);position:relative;overflow:hidden}
+.banner .l1{display:flex;gap:14px;align-items:center}
+.banner .big{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--lv);color:#fff;box-shadow:0 10px 26px color-mix(in srgb,var(--lv) 45%,transparent);flex:none}
+.banner small{font-size:11.5px;font-weight:600;color:var(--mu);letter-spacing:.3px}
+.banner h2{font-size:26px;font-weight:700;letter-spacing:-.4px;color:var(--lv);line-height:1.15}
+.banner p{font-size:13.5px;color:var(--tx2);margin-top:2px}
+.scale{display:flex;flex-direction:column;gap:4px;min-width:170px}
+.scale div{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:550;padding:5px 9px;border-radius:7px;color:var(--fa)}
+.scale div i{width:7px;height:7px;border-radius:50%;flex:none;opacity:.5}
+.scale div.on{background:var(--card2);color:var(--tx);box-shadow:inset 0 0 0 1px var(--line3)}.scale div.on i{opacity:1;box-shadow:0 0 8px currentColor}
+.adv li{list-style:none;display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:13.5px;line-height:1.55;color:var(--tx2)}
+.adv li:first-child{border-top:0}
+.adv li b{width:22px;height:22px;border-radius:6px;font-size:11px;display:grid;place-items:center;flex:none;background:var(--card2);box-shadow:inset 0 0 0 1px var(--line2);color:var(--tx2);margin-top:1px}
+.done-box{max-width:520px;margin:30px auto;text-align:center;padding:34px}
+.done-box .ok{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;margin:0 auto 16px}
+.done-box h2{font-size:18px;font-weight:650}
+.done-box p{color:var(--mu);margin:6px 0 20px;line-height:1.7}
+@media (max-width:1250px){.s2{grid-template-columns:1fr 280px}.s2 .left{display:none}}
+@media (max-width:980px){.s1,.s2,.s3{grid-template-columns:1fr}.s2 .right{display:none}}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: 'Consultations <span class="sl">/</span> <b id="crumbtitle">New consultation</b>', roles: ["nurse"] });
+const state = { age: "", sex: null, consent: null, protocol: null, protocols: [], c: null, step: null, detail: null, busy: false, timer: null };
+const VAR = { emergency: "em", urgent: "ur", routine: "ro", self_care: "sc" };
+
+function steps(cur) {
+  const names = ["Caller details", "Protocol", "Triage questions", "Result"];
+  return `<div class="steps">${names.map((n, i) => {
+    const k = i + 1, cls = k < cur ? "done" : k === cur ? "cur" : "";
+    return `<div class="st ${cls}"><i>${k < cur ? icon("check", 12) : k}</i>${n}</div>${k < 4 ? `<span class="ar">${icon("chev", 14)}</span>` : ""}`;
+  }).join("")}</div>`;
+}
+function chips() {
+  const c = state.c;
+  clearInterval(state.timer);
+  if (!c) { $("#chips").innerHTML = ""; return; }
+  $("#chips").innerHTML = `<span class="chip">Ref <b class="mono">${esc(c.caller_ref)}</b></span>` +
+    (!c.ended_at ? `<span class="chip live"><span class="dot"></span><span id="clock" class="num">00:00</span></span>` : "");
+  if (!c.ended_at) {
+    const tick = () => { const s = Math.max(0, Math.round((Date.now() - new Date(c.started_at)) / 1000));
+      const el = $("#clock"); if (el) el.textContent = `On call · ${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+    tick(); state.timer = setInterval(tick, 1000);
+  }
+}
+
+/* ---------------------------------------------------------------- stage 1 */
+async function stage1() {
+  state.c = null; chips(); $("#crumbtitle").textContent = "New consultation";
+  page.innerHTML = '<div class="loading"><span class="spin dk"></span></div>';
+  if (!state.protocols.length) state.protocols = await api("/protocols");
+  render1();
+}
+function render1() {
+  const s = state;
+  const step = s.age !== "" && s.sex && s.consent !== null ? 2 : 1;
+  page.innerHTML = `
+    <div class="ph"><div><h1>New consultation</h1><p>Record the caller's details and consent, then choose the protocol for the main symptom.</p></div>
+      <div class="acts"><span class="chip">${icon("shield", 14)} NDPA 2023: consent required</span></div></div>
+    ${steps(step)}
+    <div class="s1">
+      <div class="card">
+        <div class="ch"><span class="t"><span class="ico sm">${icon("user", 13)}</span>Caller details</span></div>
+        <div class="field"><label class="f" for="age">Age in years</label><input class="in num" id="age" type="number" min="0" max="120" inputmode="numeric" placeholder="e.g. 45" value="${esc(s.age)}"></div>
+        <div class="field"><label class="f">Sex</label><div class="seg" id="sex">${["male", "female", "other", "unknown"].map((v) =>
+          `<button type="button" data-v="${v}" class="${s.sex === v ? "on" : ""}">${sexLabel(v)}</button>`).join("")}</div></div>
+        <div class="field" style="margin:0"><label class="f">Consent</label>
+          <div class="script">Read to the caller: <b>"I will ask some questions about the symptoms. Your answers are recorded securely to help us advise you. Do you agree?"</b></div>
+          <div class="seg" id="consent"><button type="button" data-v="yes" class="${s.consent === true ? "on yes" : ""}">${icon("check", 14)} Agrees</button>
+            <button type="button" data-v="no" class="${s.consent === false ? "on no" : ""}">${icon("x", 14)} Declines</button></div>
+          <p class="help">No names are stored. A caller reference is created automatically.</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="t"><span class="ico sm">${icon("book", 13)}</span>Main symptom</span><span>${s.protocols.length} protocols</span></div>
+        <div class="fbar" style="padding:0;border:0;background:none;margin-bottom:12px"><div class="s" style="max-width:none">${icon("search", 14)}<input id="q" placeholder="Search protocols, e.g. fever"></div></div>
+        <div class="plist" id="plist"></div>
+      </div>
+    </div>
+    <div class="sbar"><div class="sum" id="sum"></div><button class="btn pri lg" id="startbtn"></button></div>`;
+  const age = $("#age");
+  age.oninput = () => { s.age = age.value; updateBar(); };
+  $$("#sex button").forEach((b) => (b.onclick = () => { s.sex = b.dataset.v; $$("#sex button").forEach((x) => x.classList.toggle("on", x === b)); updateBar(); }));
+  $$("#consent button").forEach((b) => (b.onclick = () => { s.consent = b.dataset.v === "yes"; render1(); }));
+  $("#q").oninput = (e) => drawProtocols(e.target.value);
+  drawProtocols("");
+  updateBar();
+  $("#startbtn").onclick = start;
+}
+function drawProtocols(term) {
+  const t = term.trim().toLowerCase();
+  const list = state.protocols.filter((p) => !t || p.name.toLowerCase().includes(t) || p.population.toLowerCase().includes(t));
+  $("#plist").innerHTML = list.length ? list.map((p) => `
+    <button type="button" class="pc ${state.protocol?.protocol_id === p.protocol_id ? "on" : ""}" data-id="${p.protocol_id}">
+      <span class="ico sm">${icon("pulse", 13)}</span><span><b>${esc(p.name)}</b><small><span>${esc(p.population)}</span> · ${p.question_count} questions</small></span>
+    </button>`).join("") : `<div class="empty" style="grid-column:1/-1"><b>No protocol matches "${esc(term)}"</b>Try a different word.</div>`;
+  $$("#plist .pc").forEach((b) => (b.onclick = () => {
+    state.protocol = state.protocols.find((p) => p.protocol_id === +b.dataset.id);
+    $$("#plist .pc").forEach((x) => x.classList.toggle("on", x === b)); updateBar();
+  }));
+}
+function updateBar() {
+  const s = state, btn = $("#startbtn");
+  const ageOk = s.age !== "" && +s.age >= 0 && +s.age <= 120;
+  if (s.consent === false) {
+    $("#sum").innerHTML = `<span style="color:var(--em);font-weight:550">The caller declined. End the call. No details will be stored.</span>`;
+    btn.className = "btn danger lg"; btn.innerHTML = `${icon("x", 15)} End call`; btn.disabled = false; return;
+  }
+  const missing = [!ageOk && "age", !s.sex && "sex", s.consent === null && "consent", !s.protocol && "protocol"].filter(Boolean);
+  $("#sum").innerHTML = missing.length ? `Still needed: <b>${missing.join(", ")}</b>` :
+    `Ready to start: <b>${esc(s.age)} y, ${sexLabel(s.sex)}</b> · <b>${esc(s.protocol.name)}</b>`;
+  btn.className = "btn pri lg"; btn.innerHTML = `Start triage ${icon("next", 15)}`; btn.disabled = missing.length > 0;
+}
+async function start() {
+  const s = state, btn = $("#startbtn");
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    if (s.consent === false) {
+      await api("/consultations", { method: "POST", body: { caller_age: 0, caller_sex: "unknown", consent_given: false, protocol_id: s.protocol?.protocol_id || 0 } }).catch(() => {});
+      return declined();
+    }
+    const c = await api("/consultations", { method: "POST", body: { caller_age: +s.age, caller_sex: s.sex, consent_given: true, protocol_id: s.protocol.protocol_id } });
+    history.replaceState(null, "", `?resume=${c.consultation_id}`);
+    await openConsultation(c);
+  } catch (e) { toast(e.message, true); updateBar(); }
+}
+function declined() {
+  page.innerHTML = `<div class="card done-box"><div class="ok ico mu" style="width:56px;height:56px;border-radius:16px">${icon("x", 24)}</div>
+    <h2>Call ended</h2><p>The caller did not give consent, so no details were stored.<br>Only the fact that consent was declined is noted in the audit log.</p>
+    <button class="btn pri" id="again">${icon("plus", 15)} New consultation</button></div>`;
+  $("#again").onclick = reset;
+}
+function reset() { Object.assign(state, { age: "", sex: null, consent: null, protocol: null, c: null, step: null, detail: null }); history.replaceState(null, "", location.pathname); stage1(); }
+
+/* ---------------------------------------------------------------- stage 2 */
+async function openConsultation(c) {
+  state.c = c; state.step = c.step; chips(); $("#crumbtitle").textContent = c.caller_ref;
+  state.detail = await api(`/protocols/${c.protocol_id}`).catch(() => null);
+  state.step.done ? render3() : render2();
+}
+function render2() {
+  const { c, step, detail } = state, q = step.question, answered = c.answers || [];
+  page.innerHTML = `
+    ${steps(3)}
+    <div class="s2">
+      <div class="left" style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("user", 13)}</span>Caller</span></div>
+          <div class="kv"><span>Reference</span><b class="mono">${esc(c.caller_ref)}</b></div>
+          <div class="kv"><span>Age</span><b>${c.caller_age} years</b></div>
+          <div class="kv"><span>Sex</span><b>${sexLabel(c.caller_sex)}</b></div>
+          <div class="kv"><span>Consent</span><span class="pill ok">${icon("check", 12)} Recorded</span></div></div>
+        <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("book", 13)}</span>Protocol</span></div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px">${esc(c.protocol_name)}</div>
+          <div class="sub" style="line-height:1.55">Version ${esc(detail?.version || "1.0")} · ${step.total} questions</div>
+          <div class="sub" style="line-height:1.55;margin-top:8px;font-size:11.5px">${esc(detail?.source_guidance || "")}</div></div>
+      </div>
+      <div class="card qcard" style="--glow:var(--${VAR[q.level]}S)">
+        <div class="qtop"><span class="qnum num">Question ${step.number} of ${step.total}</span><span class="lv ${q.level}">${LEVELS[q.level].label}-level question</span></div>
+        <div class="segs">${Array.from({ length: step.total }, (_, i) => `<i class="${i + 1 < step.number ? "f" : i + 1 === step.number ? "c" : ""}"></i>`).join("")}</div>
+        <div class="qtext">${esc(q.text)}</div>
+        <div class="note">${icon("info", 15)}<span>Read the question exactly as shown. If the caller is unsure, treat the answer as <b>Yes</b>. Questions run from most to least serious.</span></div>
+        <div class="yn"><button class="btn yes" id="yes">Yes <kbd>Y</kbd></button><button class="btn no" id="no">No <kbd>N</kbd></button></div>
+        <div class="qfoot"><button class="btn ghost sm" id="back" ${answered.length ? "" : "disabled"}>${icon("back", 14)} Back <kbd>⌫</kbd></button>
+          <span>A Yes ends the protocol and shows the result</span></div>
+      </div>
+      <div class="card right"><div class="ch"><span class="t"><span class="ico sm">${icon("list", 13)}</span>Answers so far</span><span class="pill num">${answered.length}</span></div>
+        ${answered.map((a) => `<div class="ans"><span class="qn">Q${a.order}</span><span class="t">${esc(a.text)}</span>${a.answer ? '<span class="pill bad">Yes</span>' : '<span class="pill ok">No</span>'}</div>`).join("")}
+        <div class="ans pending"><span class="qn">Q${q.order}</span><span class="t">${esc(q.text)}</span><span class="pill">…</span></div>
+      </div>
+    </div>`;
+  $("#yes").onclick = () => answer(true);
+  $("#no").onclick = () => answer(false);
+  $("#back").onclick = back;
+}
+async function answer(value) {
+  if (state.busy || !state.step || state.step.done) return;
+  state.busy = true; $$(".yn button").forEach((b) => (b.disabled = true));
+  try {
+    state.step = await api(`/consultations/${state.c.consultation_id}/answers`, { method: "POST", body: { question_id: state.step.question.question_id, answer: value } });
+    state.c = await api(`/consultations/${state.c.consultation_id}`);
+    state.step.done ? render3() : render2();
+  } catch (e) { toast(e.message, true); render2(); }
+  finally { state.busy = false; }
+}
+async function back() {
+  if (state.busy) return; state.busy = true;
+  try {
+    state.step = await api(`/consultations/${state.c.consultation_id}/answers/last`, { method: "DELETE" });
+    state.c = await api(`/consultations/${state.c.consultation_id}`);
+    render2();
+  } catch (e) { toast(e.message, true); } finally { state.busy = false; }
+}
+
+/* ---------------------------------------------------------------- stage 3 */
+function render3() {
+  const { c, step } = state, lv = step.level, v = VAR[lv];
+  const others = Object.keys(LEVELS).filter((k) => k !== lv);
+  page.innerHTML = `
+    ${steps(4)}
+    <div class="s3">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="banner" style="--lv:var(--${v});--lvS:var(--${v}S);--lvL:var(--${v}L)">
+          <div class="l1"><span class="big">${icon(LEVELS[lv].icon, 24)}</span>
+            <div><small>RECOMMENDED DISPOSITION</small><h2>${LEVELS[lv].label}</h2><p>${esc(LEVELS[lv].short)}</p></div></div>
+          <div class="scale">${Object.entries(LEVELS).map(([k, x]) => `<div class="${k === lv ? "on" : ""}" style="color:${k === lv ? "var(--tx)" : ""}"><i style="background:var(--${x.cls});color:var(--${x.cls})"></i>${x.rank} · ${x.label}</div>`).join("")}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:14px">
+          <div class="card"><div class="ch"><span class="t"><span class="ico sm ${v}">${icon("phone", 13)}</span>Care advice to read to the caller</span></div><ul class="adv">
+            ${step.advice.map((a, i) => `<li><b>${i + 1}</b><span>${esc(a)}</span></li>`).join("")}</ul></div>
+          <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("edit", 13)}</span>Nurse decision</span></div>
+            <div class="seg" id="dec"><button class="on" data-v="accept">${icon("check", 14)} Accept</button><button data-v="override">Override</button></div>
+            <div id="ov" class="hidden" style="margin-top:12px">
+              <div class="field"><label class="f" for="ovlevel">Change disposition to</label>
+                <select class="in" id="ovlevel">${others.map((k) => `<option value="${k}">${LEVELS[k].label}</option>`).join("")}</select></div>
+              <div class="field" style="margin:0"><label class="f" for="ovreason">Reason <span style="color:var(--em)">*</span></label>
+                <textarea class="in" id="ovreason" placeholder="Why your clinical judgement differs from the protocol"></textarea>
+                <p class="help">Required. Overrides are recorded in the audit log.</p></div>
+            </div>
+            <button class="btn pri lg" id="save" style="width:100%;margin-top:14px">${icon("check", 15)} Save and close consultation</button>
+            <button class="btn ghost sm" id="back3" style="width:100%;margin-top:6px">${icon("back", 14)} Change last answer</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("info", 13)}</span>Why this result</span></div>
+          ${step.triggered_by
+            ? `<div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.55;color:var(--tx2)"><span class="pill bad" style="flex:none">Q${step.triggered_by.order} · Yes</span><span>${esc(step.triggered_by.text)} This question is linked to <b style="color:var(--tx)">${LEVELS[lv].label}</b>.</span></div>`
+            : `<div style="font-size:13px;line-height:1.55;color:var(--tx2)">The caller answered <b style="color:var(--tx)">No</b> to all ${step.questions_asked} questions, so no danger signs were found.</div>`}</div>
+        <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("list", 13)}</span>Consultation</span></div>
+          <div class="kv"><span>Protocol</span><b>${esc(c.protocol_name)}</b></div>
+          <div class="kv"><span>Caller</span><b>${c.caller_age} y · ${sexLabel(c.caller_sex)}</b></div>
+          <div class="kv"><span>Questions asked</span><b class="num">${step.questions_asked}</b></div>
+          <div style="margin-top:6px">${(c.answers || []).map((a) => `<div class="ans"><span class="qn">Q${a.order}</span><span class="t">${esc(a.text.length > 50 ? a.text.slice(0, 48) + "…" : a.text)}</span>${a.answer ? '<span class="pill bad">Yes</span>' : '<span class="pill ok">No</span>'}</div>`).join("")}</div>
+        </div>
+      </div>
+    </div>`;
+  $$("#dec button").forEach((b) => (b.onclick = () => {
+    $$("#dec button").forEach((x) => x.classList.toggle("on", x === b));
+    $("#ov").classList.toggle("hidden", b.dataset.v !== "override");
+    if (b.dataset.v === "override") $("#ovreason").focus();
+  }));
+  $("#save").onclick = finalize;
+  $("#back3").onclick = back;
+}
+async function finalize() {
+  const override = $("#dec .on").dataset.v === "override";
+  const body = { accept: !override };
+  if (override) {
+    body.override_level = $("#ovlevel").value; body.override_reason = $("#ovreason").value.trim();
+    if (!body.override_reason) { $("#ovreason").focus(); toast("Enter a reason for the override.", true); return; }
+  }
+  const btn = $("#save"); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const c = await api(`/consultations/${state.c.consultation_id}/finalize`, { method: "POST", body });
+    state.c = c; chips(); saved(c);
+  } catch (e) { toast(e.message, true); btn.disabled = false; btn.innerHTML = `${icon("check", 15)} Save and close consultation`; }
+}
+function saved(c) {
+  history.replaceState(null, "", location.pathname);
+  page.innerHTML = `<div class="card done-box">
+    <div class="ok ico sc" style="width:56px;height:56px;border-radius:16px">${icon("check", 26)}</div>
+    <h2>Consultation <span class="mono">${esc(c.caller_ref)}</span> saved</h2>
+    <p>Final disposition ${levelPill(c.final_level)} ${c.overridden ? '<span class="pill info">Overridden by nurse</span>' : ""}<br>Call length <b class="num" style="color:var(--tx)">${duration(c.started_at, c.ended_at)}</b></p>
+    <div style="display:flex;gap:8px;justify-content:center"><a class="btn sec" href="/ui/consultation.html?id=${c.consultation_id}">${icon("file", 15)} View record</a>
+      <button class="btn pri" id="again">${icon("plus", 15)} New consultation</button></div></div>`;
+  $("#again").onclick = reset;
+}
+
+document.addEventListener("keydown", (e) => {
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+  if (!state.step || state.step.done || !$("#yes")) return;
+  if (e.key === "y" || e.key === "Y") answer(true);
+  else if (e.key === "n" || e.key === "N") answer(false);
+  else if (e.key === "Backspace") { e.preventDefault(); back(); }
+});
+
+(async () => {
+  const resume = params().get("resume");
+  try {
+    if (resume) {
+      const c = await api(`/consultations/${resume}`);
+      if (c.ended_at) { location.href = `/ui/consultation.html?id=${c.consultation_id}`; return; }
+      state.protocols = await api("/protocols");
+      await openConsultation(c);
+    } else await stage1();
+  } catch (e) { if (e.message !== "Session expired") { toast(e.message, true); stage1(); } }
+})();
+</script>
+</body></html>

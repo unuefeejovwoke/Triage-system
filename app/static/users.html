@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Users · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+.who{display:flex;align-items:center;gap:11px}.who b{display:block;font-weight:550;font-size:13px}
+.acts2{display:flex;gap:6px;justify-content:flex-end}
+.avatar.ad{background:linear-gradient(140deg,#34D399,#0F9F6E)}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: "Administration <span class=\"sl\">/</span> <b>Users</b>", roles: ["admin"] });
+let users = [], me = null;
+const initials = (n) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+
+page.innerHTML = `
+  <div class="ph"><div><h1>Users</h1><p>Nurse and administrator accounts. Deactivated users cannot sign in, and their records are kept.</p></div>
+    <div class="acts"><button class="btn pri" id="add">${icon("plus", 15)} Add user</button></div></div>
+  <div class="stats" id="stats"></div>
+  <div class="fbar"><div class="s">${icon("search", 14)}<input id="q" placeholder="Search name or email"></div>
+    <select class="fsel" id="role"><option value="">Role: all</option><option value="nurse">Nurses</option><option value="admin">Administrators</option></select>
+    <span class="count" id="count"></span></div>
+  <div id="list"><div class="loading"><span class="spin dk"></span></div></div>`;
+
+function draw() {
+  const n = (f) => users.filter(f).length;
+  $("#stats").innerHTML = [["Total users", users.length, "users", ""], ["Nurses", n((u) => u.role === "nurse"), "user", ""],
+    ["Administrators", n((u) => u.role === "admin"), "shield", "sc"], ["Deactivated", n((u) => !u.is_active), "x", "mu"]]
+    .map(([l, v, i, c]) => `<div class="stat"><span class="ico ${c}">${icon(i)}</span><div><div class="v num">${v}</div><div class="l">${l}</div></div></div>`).join("");
+  const q = $("#q").value.trim().toLowerCase(), role = $("#role").value;
+  const list = users.filter((u) => (!q || u.full_name.toLowerCase().includes(q) || u.email.includes(q)) && (!role || u.role === role));
+  $("#count").textContent = `${list.length} of ${users.length}`;
+  $("#list").innerHTML = `<table class="tbl"><thead><tr><th>User</th><th>Role</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead><tbody>
+    ${list.map((u) => `<tr>
+      <td><div class="who"><span class="avatar ${u.role === "admin" ? "ad" : ""}">${esc(initials(u.full_name))}</span>
+        <div><b>${esc(u.full_name)} ${u.user_id === me.user_id ? '<span class="pill" style="height:18px;font-size:10.5px">You</span>' : ""}</b><span class="sub">${esc(u.email)}</span></div></div></td>
+      <td>${u.role === "admin" ? `<span class="pill ok">${icon("shield", 12)} Administrator</span>` : `<span class="pill">${icon("user", 12)} Nurse</span>`}</td>
+      <td>${u.is_active ? '<span class="pill ok"><span class="dot" style="width:6px;height:6px;animation:none"></span>Active</span>' : '<span class="pill bad">Deactivated</span>'}</td>
+      <td><div class="acts2"><button class="btn sec sm" data-edit="${u.user_id}">${icon("edit", 13)} Edit</button>
+        <button class="btn sec sm" data-pw="${u.user_id}" title="Reset password">${icon("key", 13)}</button></div></td></tr>`).join("") ||
+      '<tr><td colspan="4"><div class="empty"><b>No matches</b>Change the search or filter.</div></td></tr>'}
+  </tbody></table>`;
+  $$("[data-edit]").forEach((b) => (b.onclick = () => edit(users.find((u) => u.user_id === +b.dataset.edit))));
+  $$("[data-pw]").forEach((b) => (b.onclick = () => resetPw(users.find((u) => u.user_id === +b.dataset.pw))));
+}
+const err = (m, e) => { $("#res", m.el).innerHTML = `<div class="alert err">${icon("alert", 15)}<span>${esc(e.message)}</span></div>`; };
+const segPick = (m) => $$("#r button", m.el).forEach((b) => (b.onclick = () => $$("#r button", m.el).forEach((x) => x.classList.toggle("on", x === b))));
+
+$("#add").onclick = () => {
+  const m = modal({ title: "Add user", sub: "They can sign in straight away with this email and password.",
+    body: `<div class="field"><label class="f">Full name</label><input class="in" id="n" placeholder="e.g. Ada Okafor"></div>
+      <div class="field"><label class="f">Email</label><input class="in" id="e" type="email" placeholder="name@hospital.ng"></div>
+      <div class="field"><label class="f">Role</label><div class="seg" id="r"><button class="on" data-v="nurse">${icon("user", 14)} Nurse</button><button data-v="admin">${icon("shield", 14)} Administrator</button></div></div>
+      <div class="field" style="margin:0"><label class="f">Temporary password</label><input class="in" id="p" type="text" autocomplete="off"><p class="help">At least 8 characters, with a letter and a number. Ask them to change it after first sign-in.</p></div><div id="res" style="margin-top:12px"></div>`,
+    actions: `<button class="btn sec" data-close>Cancel</button><button class="btn pri" id="go">Create user</button>` });
+  segPick(m);
+  $("#go", m.el).onclick = async () => {
+    try {
+      await api("/admin/users", { method: "POST", body: { full_name: $("#n", m.el).value.trim(), email: $("#e", m.el).value.trim(),
+        role: $("#r .on", m.el).dataset.v, password: $("#p", m.el).value } });
+      m.close(); toast("User created."); load();
+    } catch (e) { err(m, e); }
+  };
+};
+function edit(u) {
+  const m = modal({ title: `Edit ${u.full_name}`, sub: u.email,
+    body: `<div class="field"><label class="f">Full name</label><input class="in" id="n" value="${esc(u.full_name)}"></div>
+      <div class="field"><label class="f">Role</label><div class="seg" id="r"><button data-v="nurse" class="${u.role === "nurse" ? "on" : ""}">${icon("user", 14)} Nurse</button><button data-v="admin" class="${u.role === "admin" ? "on" : ""}">${icon("shield", 14)} Administrator</button></div></div>
+      <div class="tile" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><b style="font-size:13px">Account active</b><span>Turn off to block sign-in without deleting records.</span></div>
+        <button class="switch ${u.is_active ? "on" : ""}" id="act"></button></div><div id="res" style="margin-top:12px"></div>`,
+    actions: `<button class="btn sec" data-close>Cancel</button><button class="btn pri" id="go">Save changes</button>` });
+  segPick(m);
+  $("#act", m.el).onclick = (e) => e.currentTarget.classList.toggle("on");
+  $("#go", m.el).onclick = async () => {
+    try {
+      await api(`/admin/users/${u.user_id}`, { method: "PATCH", body: { full_name: $("#n", m.el).value.trim(),
+        role: $("#r .on", m.el).dataset.v, is_active: $("#act", m.el).classList.contains("on") } });
+      m.close(); toast("Changes saved."); load();
+    } catch (e) { err(m, e); }
+  };
+}
+function resetPw(u) {
+  const m = modal({ title: "Reset password", sub: `${u.full_name} · ${u.email}`,
+    body: `<div class="field" style="margin:0"><label class="f">New password</label><input class="in" id="p" type="text" autocomplete="off"><p class="help">At least 8 characters, with a letter and a number. Share it with the user securely.</p></div><div id="res" style="margin-top:12px"></div>`,
+    actions: `<button class="btn sec" data-close>Cancel</button><button class="btn pri" id="go">${icon("key", 14)} Set password</button>` });
+  $("#go", m.el).onclick = async () => {
+    try { await api(`/admin/users/${u.user_id}`, { method: "PATCH", body: { password: $("#p", m.el).value } }); m.close(); toast("Password updated."); }
+    catch (e) { err(m, e); }
+  };
+}
+async function load() { [users, me] = await Promise.all([api("/admin/users"), me || api("/auth/me")]); draw(); }
+["#q", "#role"].forEach((s) => ($(s).oninput = draw));
+load().catch((e) => toast(e.message, true));
+</script>
+</body></html>

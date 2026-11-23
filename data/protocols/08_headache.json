@@ -1,0 +1,74 @@
+{
+  "name": "Headache",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from NHS 111 guidance on headaches, WHO guidance on meningitis and stroke, and WHO recommendations on pre-eclampsia warning signs in pregnancy.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the person unconscious, very drowsy, confused, or having a fit?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Did a very severe headache start suddenly, like a blow to the head, or is it the worst headache ever?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is there a stiff neck with fever, or a rash that does not fade when a glass is pressed on it?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is there new weakness, numbness, face drooping, slurred speech, or loss of vision?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the person pregnant or recently gave birth, with blurred vision, swelling of the face or hands, or pain under the ribs?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 6,
+      "text": "Did the headache start after a head injury, or is the person on blood-thinning medicine?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is there a fever with the headache?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Have the headaches been getting more frequent or worse over several weeks?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Note the time the headache started.",
+      "Lay the person on their side if drowsy or vomiting.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic today.",
+      "If there is fever, ask for a malaria test.",
+      "Do not drink alcohol and avoid strong painkillers until seen.",
+      "Call 112 if the person becomes confused, drowsy, or develops weakness or a stiff neck."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days and ask for a blood pressure check.",
+      "Keep a headache diary: when it happens, how long, and what helps.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "Rest in a quiet, dark room and drink plenty of water.",
+      "Paracetamol can be taken as directed on the pack. Do not take painkillers on more than a few days a week.",
+      "Eat regular meals and get enough sleep.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ]
+  }
+}

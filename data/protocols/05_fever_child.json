@@ -1,0 +1,76 @@
+{
+  "name": "Fever in Children (under 5)",
+  "version": "1.0",
+  "population": "child under 5",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from WHO Integrated Management of Childhood Illness (IMCI) general danger signs and classification of fever and cough, and WHO malaria guidelines.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the child having a fit now, or has the child had a fit during this illness?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is the child unusually sleepy, hard to wake, or unconscious?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is the child unable to drink or breastfeed, or vomiting everything?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is the baby younger than 2 months?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the child struggling to breathe, making a harsh noise when breathing in while calm, or are the lips blue?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 6,
+      "text": "Is there a rash that does not fade when a glass is pressed on it, or a stiff neck?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 7,
+      "text": "Is the child breathing fast, or does the lower chest pull in with each breath?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Has the fever lasted more than two days?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 9,
+      "text": "Has the child not yet had a malaria test for this fever?",
+      "disposition": "urgent"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Take the child to the nearest hospital now. These are danger signs.",
+      "Keep breastfeeding or giving sips of fluid on the way if the child is awake and able to swallow.",
+      "Do not put anything in the child's mouth during a fit. Lay the child on their side.",
+      "Keep the child lightly dressed, not wrapped in heavy cloth."
+    ],
+    "urgent": [
+      "Take the child to a clinic or primary health centre today.",
+      "Ask for a malaria test before any malaria medicine is given.",
+      "Keep breastfeeding and give extra fluids.",
+      "Return at once or call 112 if the child cannot drink, vomits everything, has a fit, or becomes very sleepy."
+    ],
+    "self_care": [
+      "The child has a fever with no danger signs and has already tested negative for malaria.",
+      "Keep breastfeeding and give extra fluids.",
+      "Dress the child lightly. Paracetamol can be given using the dose for the child's age or weight on the pack.",
+      "Make sure the child sleeps under an insecticide-treated mosquito net.",
+      "Call back or go to a clinic if the fever lasts more than two days or any danger sign appears."
+    ]
+  }
+}

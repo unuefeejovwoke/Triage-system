@@ -1,0 +1,70 @@
+{
+  "name": "Fever in Adults (including suspected malaria)",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from WHO Guidelines for Malaria (danger signs of severe malaria and test-before-treat), the Nigeria National Malaria Treatment Guidelines, and NHS guidance on fever and sepsis.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the person unconscious, very hard to wake, confused, or having fits?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is the person too weak to sit, stand, or walk without help?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is there difficulty breathing, or a stiff neck with severe headache?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is there unusual bleeding, a rash that does not fade when a glass is pressed on it, or very dark urine or little or no urine?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the person pregnant, or vomiting everything so they cannot keep fluids or medicine down?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 6,
+      "text": "Are the eyes or skin yellow?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Has the fever lasted more than three days, or come back after malaria treatment?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Has the person not yet had a malaria test for this fever?",
+      "disposition": "urgent"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "These are danger signs of severe malaria or another serious infection and need hospital treatment now.",
+      "Lay the person on their side if drowsy or fitting. Do not put anything in their mouth during a fit.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance."
+    ],
+    "urgent": [
+      "Go to a hospital, clinic, or primary health centre today.",
+      "Ask for a malaria test (rapid diagnostic test) before any malaria treatment.",
+      "Drink fluids in small, frequent sips if able.",
+      "Call 112 if the person becomes confused, very weak, or has fits."
+    ],
+    "self_care": [
+      "The person has a fever with no danger signs and has already tested negative for malaria.",
+      "Rest and drink plenty of fluids.",
+      "Paracetamol can be taken as directed on the pack.",
+      "Sleep under an insecticide-treated mosquito net.",
+      "Call back if the fever lasts more than three days or any danger sign appears."
+    ]
+  }
+}

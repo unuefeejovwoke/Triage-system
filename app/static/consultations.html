@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Consultations · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+.md{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}
+.dp{position:sticky;top:68px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;max-height:calc(100vh - 84px);overflow:auto}
+.dp h3{font-size:14.5px;font-weight:650}
+.dp .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.dp .sec{font-size:12px;font-weight:600;color:var(--mu);margin:14px 0 8px}
+.qa{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line);font-size:12.5px;line-height:1.45}
+.qa:first-of-type{border-top:0}
+.qa .n{font-size:11px;color:var(--fa);width:22px;flex:none;padding-top:1px}
+.qa .t{flex:1;color:var(--tx2)}
+.why{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.5;color:var(--tx2)}
+.status{width:96px;flex:none;display:flex;justify-content:flex-end}
+@media (max-width:1200px){.md{grid-template-columns:1fr}.dp{position:static;max-height:none}}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: "<b>Consultations</b>" });
+const isAdmin = Session.user.role === "admin";
+let rows = [], selected = null;
+
+page.innerHTML = `
+  <div class="ph"><div><h1>Consultations</h1><p>${isAdmin ? "Every telephone triage call recorded by every nurse." : "Telephone triage calls you have recorded."}</p></div>
+    <div class="acts"><span class="chip">${icon("calendar", 14)} All time</span>
+    ${isAdmin ? "" : `<a class="btn pri" href="/ui/triage.html">${icon("plus", 15)} New consultation</a>`}</div></div>
+  <div class="stats" id="stats"></div>
+  <div class="fbar">
+    <div class="s">${icon("search", 14)}<input id="q" placeholder="Search caller ref, protocol, or nurse"></div>
+    <select class="fsel" id="lv"><option value="">Result: all</option>${Object.entries(LEVELS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("")}</select>
+    <select class="fsel" id="stt"><option value="">Status: all</option><option value="saved">Saved</option><option value="open">In progress</option><option value="override">Overridden</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="md"><div class="list" id="list"><div class="loading"><span class="spin dk"></span></div></div><aside class="dp" id="dp"></aside></div>`;
+$("#q").value = params().get("q") || "";
+
+function lastDays(filter, days = 7) {
+  const out = Array(days).fill(0), now = new Date();
+  rows.filter(filter).forEach((r) => {
+    const d = Math.floor((now - new Date(r.started_at)) / 86400000);
+    if (d >= 0 && d < days) out[days - 1 - d]++;
+  });
+  return out;
+}
+function stats() {
+  const card = (label, value, ico, cls, color, filter) => `<div class="stat"><span class="ico ${cls}">${icon(ico)}</span>
+    <div><div class="v num">${value}</div><div class="l">${label}</div></div>${sparkline(lastDays(filter), color)}</div>`;
+  const n = (f) => rows.filter(f).length;
+  $("#stats").innerHTML =
+    card("Consultations", rows.length, "activity", "", "var(--pri)", () => true) +
+    card("Emergency", n((r) => r.final_level === "emergency"), "siren", "em", "var(--em)", (r) => r.final_level === "emergency") +
+    card("Urgent", n((r) => r.final_level === "urgent"), "clock", "ur", "var(--ur)", (r) => r.final_level === "urgent") +
+    card("Nurse overrides", n((r) => r.overridden), "edit", "", "var(--pri)", (r) => r.overridden);
+}
+function filtered() {
+  const q = $("#q").value.trim().toLowerCase(), lv = $("#lv").value, st = $("#stt").value;
+  return rows.filter((r) =>
+    (!q || [r.caller_ref, r.protocol_name, r.nurse].some((x) => (x || "").toLowerCase().includes(q))) &&
+    (!lv || r.final_level === lv) &&
+    (!st || (st === "saved" ? r.ended_at : st === "open" ? !r.ended_at : r.overridden)));
+}
+function draw() {
+  const list = filtered();
+  $("#count").textContent = `${list.length} of ${rows.length}`;
+  if (!rows.length) {
+    $("#list").innerHTML = `<div class="empty"><b>No consultations yet</b>${isAdmin ? "Calls recorded by nurses will appear here." : `Start one from <a href="/ui/triage.html">New consultation</a>.`}</div>`;
+    $("#dp").innerHTML = `<div class="empty" style="padding:30px 10px">Select a consultation to see the details.</div>`;
+    return;
+  }
+  $("#list").innerHTML = list.map((r) => `
+    <div class="row ${selected === r.consultation_id ? "on" : ""}" data-id="${r.consultation_id}">
+      ${levelIco(r.final_level)}
+      <div class="main1"><div class="t1">${esc(r.protocol_name || "Consultation")}</div>
+        <div class="t2">${r.caller_age} y · ${sexLabel(r.caller_sex)}${isAdmin ? ` · ${esc(r.nurse)}` : ""}</div>
+        <div class="meta"><span class="mono">${esc(r.caller_ref)}</span><span>·</span><span>${ago(r.started_at)}</span></div></div>
+      <div>${levelPill(r.final_level)}</div>
+      <div class="metric"><span>Call length</span><b class="num">${r.ended_at ? duration(r.started_at, r.ended_at) : "—"}</b></div>
+      <div class="status">${!r.ended_at ? '<span class="pill warn">In progress</span>' : r.overridden ? '<span class="pill info">Overridden</span>' : '<span class="pill ok">Saved</span>'}</div>
+    </div>`).join("") || `<div class="empty"><b>No matches</b>Change the search or filters.</div>`;
+  $$(".row").forEach((el) => (el.onclick = () => select(+el.dataset.id)));
+  // Nurses see their own first call straight away. Admins choose a record, because opening another nurse's record is logged.
+  if (!selected && list[0] && !isAdmin) select(list[0].consultation_id);
+  else if (!selected) $("#dp").innerHTML = `<div class="empty" style="padding:40px 12px"><span class="ico mu" style="margin:0 auto 10px">${icon("file")}</span><b>Select a consultation</b>${isAdmin ? "Opening another nurse's record is noted in the audit log." : "Its details appear here."}</div>`;
+}
+async function select(id) {
+  selected = id;
+  $$(".row").forEach((el) => el.classList.toggle("on", +el.dataset.id === id));
+  $("#dp").innerHTML = '<div class="loading"><span class="spin dk"></span></div>';
+  try {
+    const c = await api(`/consultations/${id}`);
+    if (selected !== id) return;
+    const lv = c.final_level, step = c.step;
+    const canResume = !c.ended_at && !isAdmin;
+    $("#dp").innerHTML = `
+      <div style="display:flex;gap:10px;align-items:flex-start">${levelIco(lv)}<div style="flex:1;min-width:0"><h3>${esc(c.protocol_name)}</h3>
+        <div class="sub mono">${esc(c.caller_ref)}</div></div></div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">${levelPill(lv)}${c.overridden ? '<span class="pill info">Overridden</span>' : ""}${c.ended_at ? '<span class="pill ok">Saved</span>' : '<span class="pill warn">In progress</span>'}</div>
+      <div class="sec">Overview</div>
+      <div class="tiles" style="margin:0">
+        <div class="tile"><span>Caller</span><b>${c.caller_age} y · ${sexLabel(c.caller_sex)}</b></div>
+        <div class="tile"><span>Questions</span><b class="num">${c.answers.length}${step?.done ? "" : ` of ${step?.total ?? ""}`}</b></div>
+        <div class="tile"><span>Started</span><b class="num">${fmtTime(c.started_at)}</b></div>
+        <div class="tile"><span>Call length</span><b class="num">${duration(c.started_at, c.ended_at)}</b></div>
+      </div>
+      ${step?.done ? `<div class="sec">Why this result</div><div class="why">${step.triggered_by
+        ? `<b>Q${step.triggered_by.order}</b> was answered Yes: ${esc(step.triggered_by.text)}`
+        : `No to all ${step.questions_asked} questions. No danger signs found.`}${c.overridden ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line)"><b>Override:</b> system advised ${LEVELS[step.level].label}. ${esc(c.override_reason)}</div>` : ""}</div>` : ""}
+      <div class="sec">Answers</div>
+      ${c.answers.map((a) => `<div class="qa"><span class="n">Q${a.order}</span><span class="t">${esc(a.text)}</span>${a.answer ? '<span class="pill bad">Yes</span>' : '<span class="pill ok">No</span>'}</div>`).join("") || '<div class="sub">No answers yet.</div>'}
+      <div style="display:flex;gap:8px;margin-top:16px">
+        ${canResume ? `<a class="btn pri" style="flex:1" href="/ui/triage.html?resume=${c.consultation_id}">${icon("phone", 15)} Continue call</a>` : ""}
+        <a class="btn sec" style="flex:1" href="/ui/consultation.html?id=${c.consultation_id}">${icon("file", 15)} Full record</a></div>`;
+  } catch (e) { $("#dp").innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+}
+["#q", "#lv", "#stt"].forEach((s) => ($(s).oninput = () => { selected = null; draw(); }));
+api("/consultations?limit=500").then((r) => { rows = r; stats(); draw(); }).catch((e) => toast(e.message, true));
+</script>
+</body></html>

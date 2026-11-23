@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+.wrap{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+.left{position:relative;overflow:hidden;padding:36px 48px;display:flex;flex-direction:column;border-right:1px solid var(--line);
+  background:radial-gradient(700px 400px at 10% 0%,rgba(109,141,255,.16),transparent 60%),radial-gradient(600px 400px at 100% 100%,rgba(47,195,131,.08),transparent 60%),var(--panel)}
+.left .grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(600px 500px at 30% 30%,#000,transparent 75%);opacity:.5;pointer-events:none}
+.lg{display:flex;align-items:center;gap:10px;font-weight:650;position:relative}
+.lg small{display:block;font-size:11.5px;color:var(--mu);font-weight:500}
+.hero{margin:auto 0;position:relative;max-width:520px}
+.hero .tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:550;color:var(--tx2);background:var(--card);border:1px solid var(--line2);height:28px;padding:0 10px;border-radius:99px}
+.hero h1{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.8px;margin:18px 0 12px}
+.hero h1 span{background:linear-gradient(90deg,#8AA4FF,#6D8DFF 40%,#2FC383);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mu);font-size:14px;line-height:1.6;max-width:460px}
+.preview{margin-top:28px;background:var(--card);border:1px solid var(--line2);border-radius:14px;box-shadow:var(--sh2);overflow:hidden}
+.preview .ph2{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mu)}
+.preview .row{cursor:default;padding:10px 14px}
+.preview .row:hover{background:none}
+.foot{position:relative;font-size:11.5px;color:var(--fa);display:flex;justify-content:space-between}
+.right{display:grid;place-items:center;padding:32px 20px;background:var(--bg)}
+.box{width:100%;max-width:360px}
+.box h2{font-size:21px;font-weight:650;letter-spacing:-.3px}
+.box .sub{color:var(--mu);margin:4px 0 24px;font-size:13px}
+.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;height:28px;font-size:11.5px;font-weight:550;border:0;background:none;color:var(--mu);cursor:pointer;padding:0 8px;border-radius:6px}
+.pw button:hover{background:var(--hover);color:var(--tx)}
+.theme{position:fixed;top:16px;right:16px;z-index:5}
+@media (max-width:960px){.wrap{grid-template-columns:1fr}.left{display:none}}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<div class="theme" id="th"></div>
+<div class="wrap">
+  <section class="left"><div class="grid"></div>
+    <div class="lg"><span class="brand" style="margin:0">T.</span><div>Nurse Triage DSS<small>Telephone triage decision support</small></div></div>
+    <div class="hero">
+      <span class="tag"><span class="dot" style="color:var(--sc)"></span>Schmitt-Thompson-style protocols · Nigerian primary care</span>
+      <h1>Right patient, right place, <span>right time.</span></h1>
+      <p>Structured, protocol-driven decision support that helps nurses triage callers over an ordinary phone line, with danger signs asked first and every decision recorded.</p>
+      <div class="preview">
+      </div>
+    </div>
+    <div class="foot"><span>MIT Professional Master's Project · Miva Open University</span><span>NDPA 2023 aligned</span></div>
+  </section>
+  <section class="right">
+    <form class="box" id="f" novalidate>
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in with the account your administrator created for you.</p>
+      <div id="msg"></div>
+      <div class="field"><label class="f" for="email">Email</label><input class="in" id="email" type="email" autocomplete="username" required placeholder="nurse@example.com"></div>
+      <div class="field"><label class="f" for="pw">Password</label><div class="pw"><input class="in" id="pw" type="password" autocomplete="current-password" required placeholder="••••••••"><button type="button" id="show">Show</button></div></div>
+      <button class="btn pri lg" style="width:100%;margin-top:6px" id="go">Sign in</button>
+      <p class="help" style="text-align:center;margin-top:16px">Your session ends when the token expires or the tab is closed.</p>
+    </form>
+  </section>
+</div>
+<script>
+const demo = [
+  ["emergency", "Stroke Warning Signs", "70 y · Female · Q2 Face drooping", "0m 48s"],
+  ["urgent", "Fever in Children (under 5)", "3 y · Male · Q7 Fast breathing", "1m 52s"],
+  ["routine", "Abdominal Pain", "41 y · Female · Q8 Recurrent pain", "2m 10s"],
+  ["self_care", "Headache", "25 y · Male · No danger signs", "2m 31s"],
+];
+$(".preview").innerHTML = `<div class="ph2"><span>Recent calls</span><span class="pill ok" style="gap:6px"><span class="dot" style="width:6px;height:6px"></span>Live</span></div>` +
+  demo.map(([lv, t, s, d]) => `<div class="row">${levelIco(lv, "sm")}<div class="main1"><div class="t1" style="font-size:12.5px">${t}</div><div class="t2" style="font-size:11.5px">${s}</div></div>${levelPill(lv)}<span class="sub num" style="width:52px;text-align:right">${d}</span></div>`).join("");
+$("#th").innerHTML = modeSwitch(); bindModes($("#th"));
+if (Session.token && Session.user) location.href = home(Session.user.role);
+if (params().get("idle")) $("#msg").innerHTML = `<div class="alert info" style="margin-bottom:14px">${icon("shield", 15)}<span>You were signed out after ${IDLE_MINUTES} minutes without activity, to protect patient information.</span></div>`;
+else if (params().get("expired")) $("#msg").innerHTML = `<div class="alert info" style="margin-bottom:14px">${icon("clock", 15)}<span>Your session has ended. Please sign in again.</span></div>`;
+$("#show").onclick = () => { const p = $("#pw"); p.type = p.type === "password" ? "text" : "password"; $("#show").textContent = p.type === "password" ? "Show" : "Hide"; };
+$("#f").onsubmit = async (e) => {
+  e.preventDefault();
+  const email = $("#email").value.trim(), password = $("#pw").value;
+  if (!email || !password) { $("#msg").innerHTML = `<div class="alert err" style="margin-bottom:14px">${icon("alert", 15)}<span>Enter your email and password.</span></div>`; return; }
+  const btn = $("#go"); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const t = await api("/auth/login", { method: "POST", form: { username: email, password } });
+    Session.save(t.access_token, { full_name: t.full_name, role: t.role });
+    location.href = home(t.role);
+  } catch (err) {
+    $("#msg").innerHTML = `<div class="alert err" style="margin-bottom:14px">${icon("alert", 15)}<span>${esc(err.message)}</span></div>`;
+    btn.disabled = false; btn.textContent = "Sign in";
+  }
+};
+</script>
+</body></html>

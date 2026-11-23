@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Consultation record · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+.rec{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+.res{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;border:1px solid var(--lvL);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--lv) 12%,var(--card)),var(--card) 65%)}
+.res .big{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--lv);color:#fff;flex:none;box-shadow:0 8px 20px color-mix(in srgb,var(--lv) 40%,transparent)}
+.res small{font-size:11.5px;color:var(--mu);font-weight:550}
+.res h2{font-size:20px;font-weight:700;color:var(--lv);letter-spacing:-.3px;line-height:1.2}
+.res p{font-size:12.5px;color:var(--tx2)}
+.tlx{position:relative;padding-left:24px}
+.tlx::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--line2)}
+.ev{position:relative;padding:0 0 16px}
+.ev:last-child{padding-bottom:0}
+.ev::before{content:"";position:absolute;left:-21px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--card);border:2px solid var(--sc)}
+.ev.yes::before{border-color:var(--em);background:var(--em);box-shadow:0 0 8px var(--em)}
+.ev .h{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--mu);margin-bottom:3px}
+.ev .t{font-size:13.5px;color:var(--tx);line-height:1.5}
+@media (max-width:1100px){.rec{grid-template-columns:1fr}}
+@media print{.rail,.top,.noprint{display:none!important}.body{padding:0}}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: 'Consultations <span class="sl">/</span> <b id="ct">Record</b>' });
+const id = params().get("id");
+page.innerHTML = '<div class="loading"><span class="spin dk"></span></div>';
+const VAR = { emergency: "em", urgent: "ur", routine: "ro", self_care: "sc" };
+
+api(`/consultations/${id}`).then((c) => {
+  $("#ct").textContent = c.caller_ref;
+  const lv = c.final_level, engine = c.step?.done ? c.step.level : null, v = VAR[lv];
+  page.innerHTML = `
+    <div class="ph"><div style="display:flex;gap:12px;align-items:center">${levelIco(lv, "lg")}<div><h1><span class="mono" style="font-size:16px">${esc(c.caller_ref)}</span> · ${esc(c.protocol_name)}</h1>
+      <p>${fmtDate(c.started_at)} · recorded by ${esc(c.nurse)}</p></div></div>
+      <div class="acts noprint"><a class="btn sec" href="/ui/consultations.html">${icon("back", 15)} All consultations</a>
+      <button class="btn sec" id="print">${icon("print", 15)} Print</button>
+      ${Session.user.role === "admin" ? `<button class="btn sec" id="export">${icon("upload", 15)} Export</button><button class="btn danger" id="erase">${icon("x", 15)} Erase</button>` : ""}</div></div>
+    <div class="rec">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${c.ended_at ? `<div class="res" style="--lv:var(--${v});--lvL:var(--${v}L)"><span class="big">${icon(LEVELS[lv].icon, 21)}</span>
+          <div style="flex:1"><small>FINAL DISPOSITION</small><h2>${LEVELS[lv].label}</h2><p>${esc(LEVELS[lv].short)}</p></div>
+          <div style="text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end">${c.overridden
+            ? `<span class="pill info">Overridden by nurse</span><span class="sub">System advised ${levelPill(engine)}</span>` : '<span class="pill ok">System result accepted</span>'}</div></div>`
+          : `<div class="alert warn">${icon("clock", 15)}<span>This consultation was not finished. ${Session.user.role === "nurse" ? `<a href="/ui/triage.html?resume=${c.consultation_id}"><b>Continue the call</b></a>.` : ""}</span></div>`}
+        ${c.overridden ? `<div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("edit", 13)}</span>Override reason</span></div><div style="font-size:13.5px;line-height:1.6;color:var(--tx2)">${esc(c.override_reason)}</div></div>` : ""}
+        <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("list", 13)}</span>Triage questions and answers</span><span class="pill num">${c.answers.length}</span></div>
+          <div class="tlx">${c.answers.map((a) => `<div class="ev ${a.answer ? "yes" : ""}">
+            <div class="h"><span>Question ${a.order} · ${fmtTime(a.answered_at)}</span>${a.answer ? '<span class="pill bad">Yes</span>' : '<span class="pill ok">No</span>'}</div>
+            <div class="t">${esc(a.text)}</div></div>`).join("") || '<div class="sub">No answers recorded.</div>'}</div></div>
+        ${c.step?.done ? `<div class="card"><div class="ch"><span class="t">${levelIco(c.step.level, "sm")}Care advice given · ${LEVELS[c.step.level].label}</span></div>
+          <ol style="padding-left:18px;line-height:1.75;color:var(--tx2);font-size:13.5px">${c.step.advice.map((a) => `<li>${esc(a)}</li>`).join("")}</ol></div>` : ""}
+      </div>
+      <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("info", 13)}</span>Details</span></div>
+        <div class="kv"><span>Caller reference</span><b class="mono">${esc(c.caller_ref)}</b></div>
+        <div class="kv"><span>Age</span><b>${c.caller_age} years</b></div>
+        <div class="kv"><span>Sex</span><b>${sexLabel(c.caller_sex)}</b></div>
+        <div class="kv"><span>Consent</span><span class="pill ok">${icon("check", 12)} Recorded</span></div>
+        <div class="kv"><span>Protocol</span><b>${esc(c.protocol_name)}</b></div>
+        <div class="kv"><span>Nurse</span><b>${esc(c.nurse)}</b></div>
+        <div class="kv"><span>Started</span><b class="num">${fmtDate(c.started_at)}</b></div>
+        <div class="kv"><span>Closed</span><b class="num">${c.ended_at ? fmtDate(c.ended_at) : "—"}</b></div>
+        <div class="kv"><span>Call length</span><b class="num">${duration(c.started_at, c.ended_at)}</b></div>
+        <p class="help" style="margin-top:10px">Times are shown in West Africa Time (Lagos).</p>
+      </div>
+    </div>`;
+  $("#print").onclick = () => print();
+  if ($("#export")) $("#export").onclick = async () => {
+    try {
+      const data = await api(`/admin/consultations/${c.consultation_id}/export`);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+      a.download = `${c.caller_ref}.json`; a.click(); URL.revokeObjectURL(a.href);
+      toast("Record exported. The export was noted in the audit log.");
+    } catch (e) { toast(e.message, true); }
+  };
+  if ($("#erase")) $("#erase").onclick = () => {
+    const m = modal({ title: `Erase ${c.caller_ref}?`, sub: "This permanently deletes the record and its answers. It cannot be undone.",
+      body: `<div class="alert warn" style="margin-bottom:14px">${icon("alert", 15)}<span>Use only for a verified erasure request under the NDPA 2023. The audit log keeps the reference, who erased it, and why.</span></div>
+        <div class="field"><label class="f" for="why">Reason <span style="color:var(--em)">*</span></label><textarea class="in" id="why" placeholder="e.g. Caller's written erasure request, received 5 Nov 2026"></textarea><p class="help">At least 10 characters.</p></div>
+        <div class="field" style="margin:0"><label class="f" for="conf">Type <b class="mono">${esc(c.caller_ref)}</b> to confirm</label><input class="in mono" id="conf" autocomplete="off"></div><div id="res" style="margin-top:12px"></div>`,
+      actions: `<button class="btn sec" data-close>Cancel</button><button class="btn danger" id="go" disabled>${icon("x", 15)} Erase permanently</button>` });
+    const check = () => ($("#go", m.el).disabled = $("#conf", m.el).value.trim() !== c.caller_ref || $("#why", m.el).value.trim().length < 10);
+    $("#conf", m.el).oninput = check; $("#why", m.el).oninput = check;
+    $("#go", m.el).onclick = async () => {
+      try {
+        await api(`/admin/consultations/${c.consultation_id}?reason=${encodeURIComponent($("#why", m.el).value.trim())}`, { method: "DELETE" });
+        m.close(); toast(`${c.caller_ref} was erased.`); setTimeout(() => (location.href = "/ui/consultations.html"), 900);
+      } catch (e) { $("#res", m.el).innerHTML = `<div class="alert err">${icon("alert", 15)}<span>${esc(e.message)}</span></div>`; }
+    };
+  };
+}).catch((e) => { page.innerHTML = `<div class="card empty"><b>Could not open this record</b>${esc(e.message)}</div>`; });
+</script>
+</body></html>

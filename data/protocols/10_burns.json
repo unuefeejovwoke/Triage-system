@@ -1,0 +1,76 @@
+{
+  "name": "Burns",
+  "version": "1.0",
+  "population": "all ages",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from WHO burns first aid guidance and NHS 111 guidance on burns and scalds. Includes local advice against applying palm oil, toothpaste, or herbs.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the person unconscious or struggling to breathe, or were they in a fire inside a closed space?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is there burning around the mouth or nose, a hoarse voice, or soot in the mouth or nose?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is the burn large, such as a whole arm, leg, chest, or back, or does it go all the way round a limb?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Was it an electrical or chemical burn?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the burn on the face, hands, feet, private parts, or over a joint?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 6,
+      "text": "Is the skin white, brown, black, or leathery, or are there blisters bigger than the person's palm?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is the person a child under 5, an older adult over 60, pregnant, or living with diabetes?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Is a small burn not healing after two weeks?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Cool the burn under cool running water for 20 minutes if it is safe to do so. For chemical burns, rinse with plenty of water.",
+      "Remove jewellery and clothing near the burn unless stuck to the skin.",
+      "Cover loosely with clean cling film or a clean cloth. Keep the person warm.",
+      "Do not apply ice, palm oil, butter, toothpaste, or herbs."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic today.",
+      "Cool the burn under cool running water for 20 minutes first.",
+      "Cover loosely with clean cling film or a clean cloth.",
+      "Do not burst blisters or apply oil, toothpaste, or herbs."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days.",
+      "Keep the burn clean and covered.",
+      "Go sooner if the area becomes more red, swollen, smelly, or painful, or if fever starts."
+    ],
+    "self_care": [
+      "Cool the burn under cool running water for 20 minutes.",
+      "Cover loosely with clean cling film or a clean, non-fluffy cloth.",
+      "Do not apply ice, palm oil, butter, toothpaste, or herbs. Do not burst blisters.",
+      "Paracetamol can be taken as directed on the pack for pain.",
+      "Call back if the burn becomes red, swollen, or smelly, or if fever starts."
+    ]
+  }
+}

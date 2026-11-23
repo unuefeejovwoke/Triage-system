@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Protocols · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+.pw{display:grid;grid-template-columns:320px 1fr;gap:14px;align-items:start}
+.pl{position:sticky;top:68px}
+.pl .row{padding:10px 12px;gap:11px}
+.pl .row.off .main1{opacity:.5}
+.cap{text-transform:capitalize}
+.qrow{display:grid;grid-template-columns:28px 1fr 110px;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:13.5px;line-height:1.5;color:var(--tx2)}
+.qrow:first-of-type{border-top:0}
+.qrow .o{font-size:11.5px;color:var(--fa);font-weight:550}
+.qrow.end{color:var(--mu)}
+.adv{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.advb{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.advb ul{padding-left:16px;margin-top:10px;font-size:12.5px;line-height:1.6;color:var(--tx2)}
+.problems li{margin:3px 0 0 16px}
+@media (max-width:1000px){.pw{grid-template-columns:1fr}.pl{position:static}.adv{grid-template-columns:1fr}}
+</style></head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: "<b>Protocols</b>" });
+const isAdmin = Session.user.role === "admin";
+let list = [], current = null;
+
+page.innerHTML = `
+  <div class="ph"><div><h1>Protocols</h1><p>${isAdmin ? "Clinical content used by the decision engine. Every import passes the safety check." : "Reference copy of every active protocol."}</p></div>
+    <div class="acts"><span class="chip">${icon("alert", 14)} Draft for clinical review</span>
+    ${isAdmin ? `<button class="btn pri" id="import">${icon("upload", 15)} Import protocol</button>` : ""}</div></div>
+  <div class="pw"><div class="pl list" id="pl"><div class="loading"><span class="spin dk"></span></div></div><div id="pd"></div></div>`;
+
+async function load(selectId) {
+  list = await api(isAdmin ? "/admin/protocols" : "/protocols");
+  drawList();
+  const id = selectId ?? current?.protocol_id ?? list[0]?.protocol_id;
+  if (id) show(id);
+}
+function drawList() {
+  $("#pl").innerHTML = list.map((p) => `
+    <div class="row ${current?.protocol_id === p.protocol_id ? "on" : ""} ${p.is_active ? "" : "off"}" data-id="${p.protocol_id}">
+      <span class="ico sm ${p.is_active ? "" : "mu"}">${icon("pulse", 13)}</span>
+      <div class="main1"><div class="t1" style="font-size:13px">${esc(p.name)}</div><div class="t2"><span class="cap">${esc(p.population)}</span> · v${esc(p.version)} · ${p.question_count} questions</div></div>
+      ${isAdmin ? `<button class="switch ${p.is_active ? "on" : ""}" data-toggle="${p.protocol_id}" title="${p.is_active ? "Active: click to deactivate" : "Inactive: click to activate"}"></button>` : ""}
+    </div>`).join("");
+  $$("#pl .row").forEach((el) => (el.onclick = (e) => { if (!e.target.closest("[data-toggle]")) show(+el.dataset.id); }));
+  $$("[data-toggle]").forEach((b) => (b.onclick = async () => {
+    const p = list.find((x) => x.protocol_id === +b.dataset.toggle);
+    try { await api(`/admin/protocols/${p.protocol_id}/active?active=${!p.is_active}`, { method: "PATCH" });
+      toast(`${p.name} ${p.is_active ? "deactivated" : "activated"}.`); load(); } catch (e) { toast(e.message, true); }
+  }));
+}
+async function show(id) {
+  $("#pd").innerHTML = '<div class="card loading"><span class="spin dk"></span></div>';
+  current = await api(`/protocols/${id}`);
+  drawList();
+  const p = current;
+  const counts = p.questions.reduce((m, q) => ((m[q.level] = (m[q.level] || 0) + 1), m), {});
+  $("#pd").innerHTML = `
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start">
+        <div style="display:flex;gap:12px;align-items:center"><span class="ico lg">${icon("pulse", 19)}</span><div><h2 style="font-size:16px;font-weight:650">${esc(p.name)}</h2>
+          <p class="sub"><span class="cap">${esc(p.population)}</span> · version ${esc(p.version)}</p></div></div>
+        ${p.is_active ? '<span class="pill ok">Active</span>' : '<span class="pill">Inactive</span>'}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px">
+        ${Object.keys(LEVELS).map((k) => `<div class="tile"><span>${k === "self_care" ? "Default result" : LEVELS[k].label + " questions"}</span><b class="num" style="color:var(--${LEVELS[k].cls})">${k === "self_care" ? "Self-care" : counts[k] || 0}</b></div>`).join("")}
+      </div>
+      <p class="sub" style="margin-top:12px;line-height:1.6"><b style="color:var(--tx2)">Source:</b> ${esc(p.source_guidance)}</p>
+    </div>
+    <div class="card" style="margin-bottom:14px"><div class="ch"><span class="t"><span class="ico sm">${icon("list", 13)}</span>Questions, most serious first</span><span>If the answer is Yes</span></div>
+      ${p.questions.map((q) => `<div class="qrow"><span class="o">Q${q.order}</span><span>${esc(q.text)}</span><span style="text-align:right">${levelPill(q.level)}</span></div>`).join("")}
+      <div class="qrow end"><span class="o">—</span><span>No to every question</span><span style="text-align:right">${levelPill("self_care")}</span></div>
+    </div>
+    <div class="card"><div class="ch"><span class="t"><span class="ico sm">${icon("phone", 13)}</span>Care advice</span></div><div class="adv">
+      ${Object.entries(p.advice).map(([lv, lines]) => `<div class="advb">${levelPill(lv)}<ul>${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`).join("")}
+    </div></div>`;
+}
+
+if (isAdmin) $("#import").onclick = () => {
+  const m = modal({
+    title: "Import protocol", sub: "Paste or upload a protocol in the same JSON format as the files in data/protocols.", wide: true,
+    body: `<div class="field"><input type="file" id="file" accept=".json,application/json" class="in" style="padding:6px 8px;height:auto"></div>
+      <div class="field"><label class="f" for="json">Protocol JSON</label><textarea class="in mono" id="json" style="min-height:240px" placeholder='{ "name": "...", "version": "1.0", "population": "adult", "source_guidance": "...", "questions": [...], "advice": {...} }'></textarea></div>
+      <div id="res"></div>`,
+    actions: `<button class="btn sec" data-close>Cancel</button><button class="btn pri" id="go">${icon("shield", 15)} Check and import</button>`,
+  });
+  $("#file", m.el).onchange = async (e) => { const f = e.target.files[0]; if (f) $("#json", m.el).value = await f.text(); };
+  $("#go", m.el).onclick = async () => {
+    let data;
+    try { data = JSON.parse($("#json", m.el).value); }
+    catch { $("#res", m.el).innerHTML = `<div class="alert err">${icon("alert", 15)}<span>This is not valid JSON. Check brackets, commas, and quotes.</span></div>`; return; }
+    try {
+      const p = await api("/admin/protocols", { method: "POST", body: data });
+      m.close(); toast(`${p.name} passed the safety check and was imported.`); load(p.protocol_id);
+    } catch (e) {
+      const probs = e.detail?.problems;
+      $("#res", m.el).innerHTML = `<div class="alert err">${icon("alert", 15)}<div><b>${esc(probs ? "The protocol failed the safety check." : e.message)}</b>
+        ${probs ? `<ul class="problems">${probs.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}</div></div>`;
+    }
+  };
+};
+load().catch((e) => toast(e.message, true));
+</script>
+</body></html>

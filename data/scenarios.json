@@ -1,0 +1,359 @@
+[
+  {
+    "id": "S01",
+    "protocol": "Chest Pain",
+    "scenario": "58-year-old man with crushing central chest pain for 20 minutes, sweating.",
+    "yes_answers": [
+      3,
+      4
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S02",
+    "protocol": "Chest Pain",
+    "scenario": "45-year-old woman found collapsed by her daughter after complaining of chest pain.",
+    "yes_answers": [
+      1
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S03",
+    "protocol": "Chest Pain",
+    "scenario": "62-year-old man with known angina says today's pain feels different from his usual pain, mild and settled with rest.",
+    "yes_answers": [
+      5
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S04",
+    "protocol": "Chest Pain",
+    "scenario": "30-year-old woman with sharp pain when pressing on her ribs after carrying heavy bags.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "routine"
+  },
+  {
+    "id": "S05",
+    "protocol": "Stroke Warning Signs",
+    "scenario": "70-year-old woman's face suddenly drooped on one side 30 minutes ago and her speech is slurred.",
+    "yes_answers": [
+      2,
+      4
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S06",
+    "protocol": "Stroke Warning Signs",
+    "scenario": "55-year-old man had weakness in his right arm this morning that went away after 10 minutes.",
+    "yes_answers": [
+      6
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S07",
+    "protocol": "Stroke Warning Signs",
+    "scenario": "64-year-old man had brief blurred speech four days ago that fully resolved; well now.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S08",
+    "protocol": "Stroke Warning Signs",
+    "scenario": "50-year-old woman with mild tingling in both feet that came on slowly over two months; she has diabetes.",
+    "yes_answers": [
+      8
+    ],
+    "expected": "routine"
+  },
+  {
+    "id": "S09",
+    "protocol": "Breathing Difficulty",
+    "scenario": "25-year-old man ate groundnuts at a party; his lips are swelling and he is struggling to breathe.",
+    "yes_answers": [
+      1,
+      3
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S10",
+    "protocol": "Breathing Difficulty",
+    "scenario": "40-year-old woman with asthma is wheezy at rest and her blue inhaler is not helping, but she can speak in sentences.",
+    "yes_answers": [
+      5
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S11",
+    "protocol": "Breathing Difficulty",
+    "scenario": "35-year-old man with a cough for three weeks, night sweats, and weight loss; breathing comfortable.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "routine"
+  },
+  {
+    "id": "S12",
+    "protocol": "Breathing Difficulty",
+    "scenario": "28-year-old woman with a runny nose and mild cough for two days; no fever, breathing normally.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S13",
+    "protocol": "Fever in Adults (including suspected malaria)",
+    "scenario": "32-year-old man with high fever is confused and hard to wake according to his wife.",
+    "yes_answers": [
+      1
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S14",
+    "protocol": "Fever in Adults (including suspected malaria)",
+    "scenario": "27-year-old woman, 6 months pregnant, with fever and chills since yesterday; alert and drinking.",
+    "yes_answers": [
+      5,
+      8
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S15",
+    "protocol": "Fever in Adults (including suspected malaria)",
+    "scenario": "40-year-old man with fever for two days, alert, eating, not yet tested for malaria.",
+    "yes_answers": [
+      8
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S16",
+    "protocol": "Fever in Adults (including suspected malaria)",
+    "scenario": "23-year-old student with mild fever since this morning, tested negative for malaria at a clinic today, no danger signs.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S17",
+    "protocol": "Fever in Children (under 5)",
+    "scenario": "2-year-old with fever had a fit lasting two minutes this afternoon.",
+    "yes_answers": [
+      1
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S18",
+    "protocol": "Fever in Children (under 5)",
+    "scenario": "6-week-old baby feels hot and is feeding normally.",
+    "yes_answers": [
+      4
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S19",
+    "protocol": "Fever in Children (under 5)",
+    "scenario": "3-year-old with fever and cough is breathing fast but is alert and drinking.",
+    "yes_answers": [
+      7,
+      9
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S20",
+    "protocol": "Fever in Children (under 5)",
+    "scenario": "4-year-old with fever since yesterday, playful, drinking well, malaria test negative this morning.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S21",
+    "protocol": "Diarrhoea and Vomiting",
+    "scenario": "45-year-old woman with large amounts of watery diarrhoea like rice water since morning, sunken eyes, hardly passing urine.",
+    "yes_answers": [
+      4,
+      6
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S22",
+    "protocol": "Diarrhoea and Vomiting",
+    "scenario": "30-year-old man with diarrhoea containing blood for one day; drinking well.",
+    "yes_answers": [
+      5
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S23",
+    "protocol": "Diarrhoea and Vomiting",
+    "scenario": "50-year-old man with loose stools on and off for three weeks; no blood, eating normally.",
+    "yes_answers": [
+      8
+    ],
+    "expected": "routine"
+  },
+  {
+    "id": "S24",
+    "protocol": "Diarrhoea and Vomiting",
+    "scenario": "22-year-old woman with three loose stools since last night after street food; drinking well, passing urine.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S25",
+    "protocol": "Abdominal Pain",
+    "scenario": "26-year-old woman, period late, with sharp pain on the left side, light bleeding, and shoulder-tip pain.",
+    "yes_answers": [
+      4
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S26",
+    "protocol": "Abdominal Pain",
+    "scenario": "19-year-old man with pain that started around the belly button and moved to the lower right, with fever.",
+    "yes_answers": [
+      6
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S27",
+    "protocol": "Abdominal Pain",
+    "scenario": "35-year-old woman with burning when passing urine, back pain, and fever.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S28",
+    "protocol": "Abdominal Pain",
+    "scenario": "40-year-old man with bloating and mild upper belly discomfort after a heavy meal; no other symptoms.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S29",
+    "protocol": "Headache",
+    "scenario": "48-year-old woman says a sudden headache hit like a blow to the head while lifting; worst ever.",
+    "yes_answers": [
+      2
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S30",
+    "protocol": "Headache",
+    "scenario": "29-year-old woman, 34 weeks pregnant, with headache, blurred vision, and swollen face.",
+    "yes_answers": [
+      5
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S31",
+    "protocol": "Headache",
+    "scenario": "33-year-old man with headache and fever since yesterday; alert, no stiff neck.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S32",
+    "protocol": "Headache",
+    "scenario": "25-year-old student with a dull headache after long hours at a computer; no other symptoms.",
+    "yes_answers": [],
+    "expected": "self_care"
+  },
+  {
+    "id": "S33",
+    "protocol": "Bleeding in Pregnancy",
+    "scenario": "30-year-old woman, 8 months pregnant, with sudden bleeding and belly pain.",
+    "yes_answers": [
+      3,
+      5
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S34",
+    "protocol": "Bleeding in Pregnancy",
+    "scenario": "27-year-old woman, 10 weeks pregnant, soaking a pad every 30 minutes and feeling dizzy.",
+    "yes_answers": [
+      1,
+      2
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S35",
+    "protocol": "Bleeding in Pregnancy",
+    "scenario": "24-year-old woman, 9 weeks pregnant, with light spotting and no pain.",
+    "yes_answers": [
+      6
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S36",
+    "protocol": "Bleeding in Pregnancy",
+    "scenario": "31-year-old woman, 3 months pregnant, calling to ask about a bad-smelling discharge with fever; no bleeding.",
+    "yes_answers": [
+      7
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S37",
+    "protocol": "Burns",
+    "scenario": "A man was pulled from a burning room; he has a hoarse voice and soot around his nose.",
+    "yes_answers": [
+      1,
+      2
+    ],
+    "expected": "emergency"
+  },
+  {
+    "id": "S38",
+    "protocol": "Burns",
+    "scenario": "3-year-old child spilled hot tea on the hand, causing blisters bigger than her palm.",
+    "yes_answers": [
+      5,
+      6,
+      7
+    ],
+    "expected": "urgent"
+  },
+  {
+    "id": "S39",
+    "protocol": "Burns",
+    "scenario": "40-year-old woman's small cooking burn on the forearm has not healed after two and a half weeks.",
+    "yes_answers": [
+      8
+    ],
+    "expected": "routine"
+  },
+  {
+    "id": "S40",
+    "protocol": "Burns",
+    "scenario": "20-year-old man touched a hot pot; a small red area on one finger, no blisters.",
+    "yes_answers": [],
+    "expected": "self_care"
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "name": "Abdominal Pain",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from NHS 111 guidance on stomach ache and abdominal pain, and WHO guidance on surgical and obstetric emergencies.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Has the person collapsed or fainted, or are they pale, sweaty, and cold?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is the pain sudden and severe, or is the belly hard and very painful to touch?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is there vomiting of blood, or black or bloody stool?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Could the person be pregnant, with pain on one side, vaginal bleeding, or pain in the shoulder tip?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the person unable to pass stool or wind, with a swollen belly and vomiting?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 6,
+      "text": "Is there fever with the pain, or did the pain start near the belly button and move to the lower right side?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is there pain or burning when passing urine, with back pain or fever?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Has the pain come and gone for more than a week, with no other worrying signs?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Do not eat or drink anything in case surgery is needed.",
+      "Lie still in the most comfortable position.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic today and be seen within the next few hours.",
+      "Avoid eating until seen. Small sips of water are fine.",
+      "Do not take strong painkillers that may hide the signs before a clinician checks you.",
+      "Call 112 if the pain becomes severe or the person faints."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days.",
+      "Keep a note of when the pain happens and what makes it better or worse.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "The answers point to a mild cause such as indigestion or wind.",
+      "Rest, drink water, and eat small, light meals.",
+      "Avoid alcohol, fizzy drinks, and spicy or fatty food for a day or two.",
+      "Paracetamol can be taken as directed on the pack.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ]
+  }
+}

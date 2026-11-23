@@ -1,0 +1,70 @@
+{
+  "name": "Breathing Difficulty",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from NHS 111 guidance on shortness of breath and anaphylaxis, and WHO guidance on acute respiratory illness and tuberculosis screening.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the person struggling to breathe, or unable to say more than a few words at a time?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Are the lips, tongue, or face blue or grey, or is the person confused or very drowsy?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Did the breathing problem start suddenly with swelling of the face, lips, or throat, or after a sting, food, or medicine?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is there chest pain together with the breathing difficulty?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is the person short of breath while resting, or is their usual inhaler not helping?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 6,
+      "text": "Is there a fever with cough and fast breathing?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Has a cough lasted more than two weeks, or is there night sweats or weight loss?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Help the person sit upright, leaning slightly forward. Loosen tight clothing.",
+      "If they have an adrenaline auto-injector for allergy, use it now.",
+      "If they have a reliever inhaler, they can use it while waiting.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance."
+    ],
+    "urgent": [
+      "Go to a hospital or clinic today and be seen within the next few hours.",
+      "Use the reliever inhaler as prescribed while travelling.",
+      "Sit upright and rest.",
+      "Call 112 if lips turn blue or grey or the person cannot speak in full sentences."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days and ask for a tuberculosis (TB) test.",
+      "Cover the mouth when coughing and keep the room well aired.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "The answers point to a mild breathing complaint, such as a common cold.",
+      "Rest, drink plenty of fluids, and keep the room well aired.",
+      "Paracetamol can be taken as directed on the pack for fever or aches.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ]
+  }
+}

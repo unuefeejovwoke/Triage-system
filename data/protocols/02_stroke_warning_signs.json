@@ -1,0 +1,75 @@
+{
+  "name": "Stroke Warning Signs",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from the NHS FAST stroke campaign (Face, Arms, Speech, Time) and WHO guidance on stroke recognition.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Has the person collapsed, or are they unresponsive or having a fit?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Face: has one side of the face suddenly dropped, or can they not smile evenly?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Arms: is there sudden weakness or numbness in one arm or leg, or can they not lift both arms and keep them up?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Speech: is their speech suddenly slurred or muddled, or can they not understand what is said?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is there sudden loss of vision, sudden severe dizziness or loss of balance, or a sudden very severe headache?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 6,
+      "text": "Did any of these signs start in the last 24 hours, even if they have now gone?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 7,
+      "text": "Did signs like these happen in the past week but have now fully gone?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Has numbness or tingling come on slowly over weeks, with no sudden change?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Note the time the symptoms started, or when the person was last seen well. Tell the hospital this time.",
+      "Do not give food, drink, or medicine by mouth in case swallowing is affected.",
+      "Do not wait to see if the symptoms go away. Do not take the person to a traditional healer or place of worship first.",
+      "Lay the person on their side if they are drowsy or vomiting."
+    ],
+    "urgent": [
+      "Go to a hospital today to be checked for a mini-stroke (TIA), even though the signs have gone.",
+      "Do not drive yourself.",
+      "Take a list of current medicines, including any for blood pressure or diabetes.",
+      "If any stroke sign comes back, call 112 immediately."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days.",
+      "Ask for a blood pressure and blood sugar check.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "No stroke warning signs were found.",
+      "Learn the FAST signs: Face dropping, Arm weakness, Speech problems, Time to call 112.",
+      "Keep blood pressure checks and medicines up to date.",
+      "Call 112 at once if any sudden weakness, face drooping, or speech problem appears."
+    ]
+  }
+}

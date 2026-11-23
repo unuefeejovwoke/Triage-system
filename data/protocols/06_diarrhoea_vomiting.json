@@ -1,0 +1,75 @@
+{
+  "name": "Diarrhoea and Vomiting",
+  "version": "1.0",
+  "population": "adult",
+  "status": "draft - for clinical review",
+  "source_guidance": "Adapted from WHO guidance on assessing dehydration and treating diarrhoea with oral rehydration salts (ORS), WHO cholera guidance, and NHS 111 guidance on diarrhoea and vomiting.",
+  "questions": [
+    {
+      "order": 1,
+      "text": "Is the person very drowsy, confused, or unconscious?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 2,
+      "text": "Is the person unable to drink, or vomiting everything so no fluid stays down?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 3,
+      "text": "Is there vomiting of blood or dark material like coffee grounds, or black stool with dizziness or fainting?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 4,
+      "text": "Is there a large amount of watery diarrhoea that looks like rice water, with very little urine or sunken eyes?",
+      "disposition": "emergency"
+    },
+    {
+      "order": 5,
+      "text": "Is there blood in the stool?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 6,
+      "text": "Has the person passed little or no urine in the last 8 hours, or are they very thirsty with a dry mouth?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 7,
+      "text": "Is the person pregnant, over 65, or living with diabetes, kidney disease, or HIV?",
+      "disposition": "urgent"
+    },
+    {
+      "order": 8,
+      "text": "Has the diarrhoea lasted more than 14 days?",
+      "disposition": "routine"
+    }
+  ],
+  "advice": {
+    "emergency": [
+      "Call 112 now, or get to the nearest hospital emergency department immediately.",
+      "Give oral rehydration salts (ORS) in small, frequent sips on the way if the person can swallow.",
+      "Severe watery diarrhoea can be cholera. Wash hands with soap and water after any contact.",
+      "Do not drive yourself. Ask someone to take you, or wait for the ambulance."
+    ],
+    "urgent": [
+      "Go to a clinic or hospital today.",
+      "Start oral rehydration salts (ORS) now: give a cup after each loose stool, in small sips if vomiting.",
+      "Keep drinking clean, safe water.",
+      "Call 112 if the person becomes drowsy or cannot keep any fluid down."
+    ],
+    "routine": [
+      "Book a clinic appointment within the next few days for tests.",
+      "Keep drinking ORS or clean fluids and keep eating normal food.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ],
+    "self_care": [
+      "Drink oral rehydration salts (ORS) or clean fluids after each loose stool.",
+      "Keep eating light, normal food in small amounts.",
+      "Wash hands with soap and water after using the toilet and before preparing food.",
+      "Drink only safe water: boiled, treated, or sealed.",
+      "Call back at once if symptoms get worse or new symptoms appear."
+    ]
+  }
+}

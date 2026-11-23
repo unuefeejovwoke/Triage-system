@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit log · Nurse Triage DSS</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<script src="js/core.js"></script>
+<script>
+"use strict";
+const page = layout({ crumb: "Administration <span class=\"sl\">/</span> <b>Audit log</b>", roles: ["admin"] });
+const A = {
+  login: ["Signed in", "ok", "user"], login_failed: ["Failed sign-in", "bad", "alert"],
+  consultation_started: ["Consultation started", "info", "phone"], consultation_closed: ["Consultation saved", "ok", "check"],
+  disposition_overridden: ["Disposition overridden", "warn", "edit"], consent_declined: ["Consent declined", "", "x"],
+  user_created: ["User created", "info", "users"], user_updated: ["User updated", "info", "users"],
+  protocol_created: ["Protocol imported", "info", "upload"], protocol_updated: ["Protocol edited", "info", "book"],
+  protocol_activated: ["Protocol activated", "ok", "book"], protocol_deactivated: ["Protocol deactivated", "", "book"],
+  login_locked: ["Sign-in blocked (locked)", "bad", "shield"], consultation_viewed: ["Record viewed by another user", "info", "file"],
+  consultation_exported: ["Record exported", "warn", "upload"], consultation_erased: ["Record erased", "bad", "x"],
+  retention_purge: ["Retention clean-up", "warn", "refresh"],
+};
+const ICO = { ok: "sc", bad: "em", info: "", warn: "ur", "": "mu" };
+let rows = [];
+page.innerHTML = `
+  <div class="ph"><div><h1>Audit log</h1><p>Every sign-in, consultation, override, and administrative change. Kept for accountability under the NDPA 2023.</p></div>
+    <div class="acts"><button class="btn sec" id="ref">${icon("refresh", 15)} Refresh</button></div></div>
+  <div class="stats" id="stats"></div>
+  <div class="fbar"><div class="s">${icon("search", 14)}<input id="q" placeholder="Search user or record"></div>
+    <select class="fsel" id="a"><option value="">Action: all</option>${Object.entries(A).map(([k, [l]]) => `<option value="${k}">${l}</option>`).join("")}</select>
+    <span class="count" id="count"></span></div>
+  <div id="list"><div class="loading"><span class="spin dk"></span></div></div>`;
+function draw() {
+  const n = (k) => rows.filter((r) => k.includes(r.action)).length;
+  $("#stats").innerHTML = [["Events", rows.length, "shield", ""], ["Sign-ins", n(["login"]), "user", "sc"],
+    ["Failed or blocked sign-ins", n(["login_failed", "login_locked"]), "alert", "em"], ["Overrides", n(["disposition_overridden"]), "edit", "ur"]]
+    .map(([l, v, i, c]) => `<div class="stat"><span class="ico ${c}">${icon(i)}</span><div><div class="v num">${v}</div><div class="l">${l}</div></div></div>`).join("");
+  const q = $("#q").value.trim().toLowerCase(), a = $("#a").value;
+  const list = rows.filter((r) => (!a || r.action === a) && (!q || (r.user_name || "").toLowerCase().includes(q) || r.entity.toLowerCase().includes(q)));
+  $("#count").textContent = `${list.length} of ${rows.length} most recent`;
+  $("#list").innerHTML = `<div class="list">${list.map((r) => { const [l, c, i] = A[r.action] || [r.action, "", "info"];
+      return `<div class="row" style="cursor:default"><span class="ico sm ${ICO[c]}">${icon(i, 13)}</span>
+        <div class="main1"><div class="t1" style="font-size:13px">${esc(l)}</div><div class="t2">${esc(r.user_name || "Unknown user")}</div></div>
+        <span class="mono sub" style="width:200px;text-align:right">${esc(r.entity)}</span>
+        <span class="sub num" style="width:150px;text-align:right">${fmtDate(r.created_at)}</span></div>`; }).join("") ||
+      '<div class="empty"><b>No entries</b>Nothing matches the filters.</div>'}</div>`;
+}
+async function load() { rows = await api("/admin/audit-logs?limit=1000"); draw(); }
+["#q", "#a"].forEach((s) => ($(s).oninput = draw));
+$("#ref").onclick = () => load().then(() => toast("Audit log refreshed."));
+load().catch((e) => toast(e.message, true));
+</script>
+</body></html>
